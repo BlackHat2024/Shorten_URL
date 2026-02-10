@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: Shorten_URL
+  datasource:
+    url: jdbc:mysql://localhost:3306/short_URL?createDatabaseIfNotExist=true
+    password:
+    username: root
+  jpa:
+    show-sql: true
+
+
