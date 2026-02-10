@@ -17,7 +17,7 @@ public class ShortURL {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 20)
-    private String short_url;
+    private String shortUrl;
 
     @Column(nullable = false, length = 2048)
     private String originalUrl;
