@@ -38,10 +38,6 @@ public class ShortURL {
         this.clickCount++;
     }
 
-    public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expirationTime);
-    }
-
     public void resetExpiration(LocalDateTime newExpirationTime) {
         this.expirationTime = newExpirationTime;
     }
