@@ -12,4 +12,4 @@ url-shortener:
   default-expiration-minutes: 5
   base-url: http://localhost:8080
   short-url-length: 8
-  cleanup-interval-ms: 60000
+  cleanup-interval-ms: 300000

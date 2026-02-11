@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +27,11 @@ public class UrlController {
     ) {
         ShortUrlResponse response = urlService.shorten(request, createdBy);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ShortUrlResponse>> getAll() {
+        return ResponseEntity.ok(urlService.getAllShortenedUrls());
     }
 
     @GetMapping("/original")

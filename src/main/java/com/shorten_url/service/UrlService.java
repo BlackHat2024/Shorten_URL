@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +97,19 @@ public class UrlService {
         ShortURL entity = getValidEntityByShortUrlFull(shortUrlFull);
         entity.resetExpiration(LocalDateTime.now().plusMinutes(request.getExpirationMinutes()));
         return toResponse(entity);
+    }
+
+    @Transactional
+    public void deleteExpiredNow() {
+        urlRepository.deleteExpiredUrls(LocalDateTime.now());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ShortUrlResponse> getAllShortenedUrls() {
+        return urlRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     private ShortURL getValidEntityByShortUrlFull(String shortUrlFull) {
