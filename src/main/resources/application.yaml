@@ -7,9 +7,22 @@ spring:
     username: root
   jpa:
     show-sql: true
+  jwt:
+    secret: myVeryLongSecretKeyThatIsAtLeast32CharactersLongForHS256!
+    accessTokenExpiration: 900000
+    refreshTokenExpiration: 604800000
 
 url-shortener:
   default-expiration-minutes: 5
   base-url: http://localhost:8080
   short-url-length: 8
   cleanup-interval-ms: 300000
+
+logging:
+  level:
+    root: INFO
+    com.shorten_url: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

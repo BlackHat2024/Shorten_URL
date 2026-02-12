@@ -1,6 +1,7 @@
 package com.shorten_url;
 
 import com.shorten_url.service.UrlService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,12 +16,9 @@ import static org.springframework.web.servlet.function.RequestPredicates.GET;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
 
 @EnableScheduling
+@RequiredArgsConstructor
 @SpringBootApplication
 public class ShortenUrlApplication {
-
-    public ShortenUrlApplication(UrlService urlService) {
-        this.urlService = urlService;
-    }
 
     public static void main(String[] args) {
         SpringApplication.run(ShortenUrlApplication.class, args);

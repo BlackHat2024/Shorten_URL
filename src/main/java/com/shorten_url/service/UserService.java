@@ -5,16 +5,19 @@ import com.shorten_url.entity.Role;
 import com.shorten_url.entity.User;
 import com.shorten_url.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class UserService {
+
+    private final PasswordEncoder encoder;
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Transactional
     public User register(RegisterRequest registerRequest) {
@@ -26,8 +29,8 @@ public class UserService {
         }
         User user = new User();
         user.setEmail(registerRequest.getEmail());
-        user.setPassword(registerRequest.getPassword());
-        user.setRole(Role.ROLE_USER);
+        user.setPassword(encoder.encode(registerRequest.getPassword()));
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 }

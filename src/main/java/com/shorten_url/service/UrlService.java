@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UrlService {
 
@@ -34,7 +35,6 @@ public class UrlService {
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private final SecureRandom random = new SecureRandom();
 
-    @Transactional
     public ShortUrlResponse shorten(ShortUrlRequest request, String createdBy) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -69,8 +69,6 @@ public class UrlService {
         return toResponse(saved);
     }
 
-
-    @Transactional
     public ShortUrlResponse resolveByCode(String shortCode) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -86,20 +84,17 @@ public class UrlService {
         return toResponse(entity);
     }
 
-    @Transactional
     public OriginalUrl getOriginalUrl(String shortUrlFull) {
         ShortURL entity = getValidEntityByShortUrlFull(shortUrlFull);
         return toUrl(entity);
     }
 
-    @Transactional
     public ShortUrlResponse overwriteExpirationByShortUrl(String shortUrlFull, UpdateExpirationRequest request) {
         ShortURL entity = getValidEntityByShortUrlFull(shortUrlFull);
         entity.resetExpiration(LocalDateTime.now().plusMinutes(request.getExpirationMinutes()));
         return toResponse(entity);
     }
 
-    @Transactional
     public void deleteExpiredNow() {
         urlRepository.deleteExpiredUrls(LocalDateTime.now());
     }

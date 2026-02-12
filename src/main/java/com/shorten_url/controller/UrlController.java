@@ -8,6 +8,7 @@ import com.shorten_url.service.UrlService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<ShortUrlResponse> shorten(
             @Valid @RequestBody ShortUrlRequest request,
-            @RequestHeader(required = false) String createdBy
+            @AuthenticationPrincipal String createdBy
     ) {
         ShortUrlResponse response = urlService.shorten(request, createdBy);
         return ResponseEntity.ok(response);
