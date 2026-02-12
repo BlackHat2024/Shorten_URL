@@ -4,10 +4,12 @@ import com.shorten_url.dto.OriginalUrl;
 import com.shorten_url.dto.ShortUrlRequest;
 import com.shorten_url.dto.ShortUrlResponse;
 import com.shorten_url.dto.UpdateExpirationRequest;
+import com.shorten_url.entity.Jwt;
 import com.shorten_url.service.UrlService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +26,10 @@ public class UrlController {
     @PostMapping("/shorten")
     public ResponseEntity<ShortUrlResponse> shorten(
             @Valid @RequestBody ShortUrlRequest request,
-            @AuthenticationPrincipal String createdBy
-    ) {
-        ShortUrlResponse response = urlService.shorten(request, createdBy);
-        return ResponseEntity.ok(response);
+            Authentication authentication) {
+
+        String email = (String) authentication.getPrincipal();
+        return ResponseEntity.ok(urlService.shorten(request, email));
     }
 
     @GetMapping("/all")

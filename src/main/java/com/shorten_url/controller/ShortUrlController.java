@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
 @RestController
+@RequestMapping("/short")
 @RequiredArgsConstructor
 public class ShortUrlController {
 
@@ -18,7 +20,6 @@ public class ShortUrlController {
 
     @GetMapping("/{code}")
     public ResponseEntity<Void> redirect(@PathVariable String code) {
-        // Validate code format (8 alphanumeric characters)
         if (!code.matches("^[0-9A-Za-z]{8}$")) {
             return ResponseEntity.notFound().build();
         }

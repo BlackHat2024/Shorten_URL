@@ -35,8 +35,10 @@ public class UrlService {
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private final SecureRandom random = new SecureRandom();
 
-    public ShortUrlResponse shorten(ShortUrlRequest request, String createdBy) {
+    public ShortUrlResponse shorten(ShortUrlRequest request, String email) {
         LocalDateTime now = LocalDateTime.now();
+
+        urlRepository.deleteByOriginalUrlAndExpirationTimeBefore(request.getUrl(), now);
 
         int expirationMinutes = (request.getExpirationMinutes() != null)
                 ? request.getExpirationMinutes()
@@ -50,10 +52,10 @@ public class UrlService {
 
         if (existing != null) {
             existing.resetExpiration(newExpiration);
-            if (createdBy != null && !createdBy.isBlank()) {
-                existing.setCreatedBy(createdBy);
+            if (email != null && !email.isBlank()) {
+                existing.setCreatedBy(email);
             }
-            return toResponse(existing);
+            return toResponse(urlRepository.save(existing));
         }
 
         String code = generateUniqueCode();
@@ -63,24 +65,18 @@ public class UrlService {
         entity.setOriginalUrl(request.getUrl());
         entity.setCreatedAt(now);
         entity.setExpirationTime(newExpiration);
-        entity.setCreatedBy(createdBy);
+        entity.setCreatedBy(email);
+        entity.setClickCount(0L);
 
         ShortURL saved = urlRepository.save(entity);
         return toResponse(saved);
     }
 
     public ShortUrlResponse resolveByCode(String shortCode) {
-        LocalDateTime now = LocalDateTime.now();
 
-        ShortURL entity = urlRepository.findByShortUrl(shortCode)
-                .orElseThrow(() -> new UrlNotFoundException(shortCode, false));
-
-        if (!entity.getExpirationTime().isAfter(now)) {
-            urlRepository.delete(entity);
-            throw new UrlNotFoundException(shortCode, true);
-        }
-
+       ShortURL entity = getValidEntityByShortUrlFull(shortCode);
         entity.incrementClickCount();
+
         return toResponse(entity);
     }
 

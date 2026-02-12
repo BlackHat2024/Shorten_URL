@@ -25,4 +25,6 @@ public interface UrlRepository extends JpaRepository<ShortURL, Long> {
     @Modifying
     @Query("DELETE FROM ShortURL s WHERE s.expirationTime <= :now")
     int deleteExpiredUrls(@Param("now") LocalDateTime now);
+
+    void deleteByOriginalUrlAndExpirationTimeBefore(String url, LocalDateTime now);
 }
